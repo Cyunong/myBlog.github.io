@@ -148,6 +148,168 @@
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-TinyKV-Project2" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2021/08/04/TinyKV-Project2/">TinyKV Project2 RaftKV</a>
+    </h1>
+  
+
+        
+        <a href="/2021/08/04/TinyKV-Project2/" class="archive-article-date">
+  	<time datetime="2021-08-04T08:34:53.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2021-08-04</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>要实现一个分布式的KV数据库，那么保证各数据库中数据的一致性就非常重要了。Project2主要就是使用一致性算法<a target="_blank" rel="noopener" href="https://github.com/maemual/raft-zh_cn/blob/master/raft-zh_cn.md">Raft</a>实现一个高可用的KV server，主要分为三个部分：</p>
+<ul>
+<li>实现基础的Raft算法</li>
+<li>在Raft的基础上构建一个容错的KV server</li>
+<li>支持raftlog的垃圾回收和快照</li>
+</ul>
+<h2 id="part-a">Part A</h2>
+<p>Part A实现基础的raft算法，需要补充的代码位于<code>raft/</code>，这一部分同样可以拆分为三个部分：</p>
+<ul>
+<li>Leader选举</li>
+<li>日志复制</li>
+<li>Raw node接口</li>
+</ul>
+        
+          <a class="article-more-a" href="/2021/08/04/TinyKV-Project2/#more">more >></a>
+        
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2021/08/04/TinyKV-Project2/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
+    <article id="post-TinyKV-Project1" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2021/07/04/TinyKV-Project1/">TinyKV Project1 StandaloneKV</a>
+    </h1>
+  
+
+        
+        <a href="/2021/07/04/TinyKV-Project1/" class="archive-article-date">
+  	<time datetime="2021-07-04T08:27:55.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2021-07-04</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>在 <a target="_blank" rel="noopener" href="https://github.com/tidb-incubator/tinykv/blob/course/doc/project1-StandaloneKV.md">Project1</a> 中，需要构建一个单机键值存储的 <a target="_blank" rel="noopener" href="https://grpc.io/docs/guides/">gRPC</a> 服务器，并且支持 column familly(CF)，CF 类似于一个命名空间，不同 CF 中的同名的键是不同的，可以简单的将不同的CF理解成不同的mini databases。</p>
+<h2 id="目标与层次结构">目标与层次结构</h2>
+<p>Project1主要是实现<code>kv</code>中的部分代码来完成单机KV数据库服务器<code>Server</code>。它的层次结构如下图所示：</p>
+<center>
+<img src="/2021/07/04/TinyKV-Project1/server.png" width="40%" alt="Server层次结构">
+</center>
+        
+          <a class="article-more-a" href="/2021/07/04/TinyKV-Project1/#more">more >></a>
+        
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">TinyKV</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">数据库</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2021/07/04/TinyKV-Project1/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
     <article id="post-Pytorch" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -345,7 +507,10 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <h2 id="overview">5.28 Overview</h2>
+        <blockquote>
+<p>2021/5/28</p>
+</blockquote>
+<h2 id="overview">Overview</h2>
 <p>TiKV使用Key-Value模型保存数据，并且提供有序遍历方法。可以看做一个按照Key的二进制顺序有序的巨大Map。使用开源的RocksDB作为单机存储引擎</p>
 <h3 id="raft协议">Raft协议</h3>
 <p>Raft协议的每个副本都会处于三种状态之一：Leader、Follower、Candidate</p>
@@ -824,173 +989,9 @@ A：shell命令分为内建命令和外部命令。内建命令是shell解释程
 
 
   
-    <article id="post-存储引擎" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2021/03/23/%E5%AD%98%E5%82%A8%E5%BC%95%E6%93%8E/">存储引擎</a>
-    </h1>
-  
-
-        
-        <a href="/2021/03/23/%E5%AD%98%E5%82%A8%E5%BC%95%E6%93%8E/" class="archive-article-date">
-  	<time datetime="2021-03-23T15:16:26.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2021-03-23</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        存储引擎是MySQL中重要的一环，其插件式的存储引擎为我们提供了很多选择，MySQL服务器的主要架构图如下：
-<center>
-<img src="/2021/03/23/%E5%AD%98%E5%82%A8%E5%BC%95%E6%93%8E/mysql.png" width="60%" alt="MySQL架构">
-</center>
-<p>下面分别介绍一下几个常用的存储引擎的特点</p>
-        
-          <a class="article-more-a" href="/2021/03/23/%E5%AD%98%E5%82%A8%E5%BC%95%E6%93%8E/#more">more >></a>
-        
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">数据库</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">MySQL</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2021/03/23/%E5%AD%98%E5%82%A8%E5%BC%95%E6%93%8E/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-服务器部署neo4j" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2021/03/19/%E6%9C%8D%E5%8A%A1%E5%99%A8%E9%83%A8%E7%BD%B2neo4j/">服务器部署neo4j</a>
-    </h1>
-  
-
-        
-        <a href="/2021/03/19/%E6%9C%8D%E5%8A%A1%E5%99%A8%E9%83%A8%E7%BD%B2neo4j/" class="archive-article-date">
-  	<time datetime="2021-03-19T11:13:48.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2021-03-19</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>一年前国创项目因前端展示需要，在阿里云上购置了一台服务器，促销价一年还不到一百，前段时间到期了（<del>当时能够报销竟然只买了一年的</del>)，其续费要用原价，贵的要死（果然都是套路）。现在随着结项答辩的临近，只能自掏腰包重新促销价购买了一年新的服务器。并且重新部署了neo4j，在服务器跑上我们的程序，成功借助微信公众号作为前端展示。重新部署的过程中，很多坑踩了两次，在这里记录下来，也算是一个总结。</p>
-        
-          <a class="article-more-a" href="/2021/03/19/%E6%9C%8D%E5%8A%A1%E5%99%A8%E9%83%A8%E7%BD%B2neo4j/#more">more >></a>
-        
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">技术</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">Neo4j</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2021/03/19/%E6%9C%8D%E5%8A%A1%E5%99%A8%E9%83%A8%E7%BD%B2neo4j/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
   
     <nav id="page-nav">
-      <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="extend next" rel="next" href="/page/2/">Next &amp;raquo;</a>
+      <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><a class="extend next" rel="next" href="/page/2/">Next &amp;raquo;</a>
     </nav>
   
 

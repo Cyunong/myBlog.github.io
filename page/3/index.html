@@ -6,27 +6,15 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge" >
   <link rel="dns-prefetch" href="http://chenyunong.com">
-  <title>TinyKV课程 | Control Yourself</title>
+  <title>Control Yourself</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="2021&#x2F;5&#x2F;28  Overview TiKV使用Key-Value模型保存数据，并且提供有序遍历方法。可以看做一个按照Key的二进制顺序有序的巨大Map。使用开源的RocksDB作为单机存储引擎 Raft协议 Raft协议的每个副本都会处于三种状态之一：Leader、Follower、Candidate  Leader：所有请求的处理者，接受client的更新请求，本地处理后">
-<meta property="og:type" content="article">
-<meta property="og:title" content="TinyKV课程">
-<meta property="og:url" content="http://chenyunong.com/2021/05/28/TinyKV/index.html">
+  <meta property="og:type" content="website">
+<meta property="og:title" content="Control Yourself">
+<meta property="og:url" content="http://chenyunong.com/page/3/index.html">
 <meta property="og:site_name" content="Control Yourself">
-<meta property="og:description" content="2021&#x2F;5&#x2F;28  Overview TiKV使用Key-Value模型保存数据，并且提供有序遍历方法。可以看做一个按照Key的二进制顺序有序的巨大Map。使用开源的RocksDB作为单机存储引擎 Raft协议 Raft协议的每个副本都会处于三种状态之一：Leader、Follower、Candidate  Leader：所有请求的处理者，接受client的更新请求，本地处理后">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="http://chenyunong.com/2021/05/28/TinyKV/region.png">
-<meta property="og:image" content="http://chenyunong.com/2021/05/28/TinyKV/server.png">
-<meta property="og:image" content="http://chenyunong.com/2021/05/28/TinyKV/test_project1.PNG">
-<meta property="og:image" content="http://chenyunong.com/2021/05/28/TinyKV/raft.png">
-<meta property="og:image" content="http://chenyunong.com/2021/05/28/TinyKV/test_project2aa.PNG">
-<meta property="article:published_time" content="2021-05-28T03:12:56.000Z">
-<meta property="article:modified_time" content="2021-07-12T11:14:31.160Z">
 <meta property="article:author" content="Yunong">
-<meta property="article:tag" content="TinyKV">
-<meta property="article:tag" content="数据库">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="http://chenyunong.com/2021/05/28/TinyKV/region.png">
   
     <link rel="alternative" href="/atom.xml" title="Control Yourself" type="application/atom+xml">
   
@@ -158,208 +146,30 @@
             <canvas data-colors="#eaeaea" data-sectionHeight="100" data-contentId="js-content" id="myCanvas1" class="anm-canvas"></canvas>
           </div>
           <div id="js-content" class="content-ll">
-            <article id="post-TinyKV" class="article article-type-post " itemscope itemprop="blogPost">
+            
+  
+    <article id="post-开学" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
       <header class="article-header">
         
   
-    <h1 class="article-title" itemprop="name">
-      TinyKV课程
+    <h1 itemprop="name">
+      <a class="article-title" href="/2021/02/22/%E5%BC%80%E5%AD%A6/">开学</a>
     </h1>
   
 
         
-        <a href="/2021/05/28/TinyKV/" class="archive-article-date">
-  	<time datetime="2021-05-28T03:12:56.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2021-05-28</time>
+        <a href="/2021/02/22/%E5%BC%80%E5%AD%A6/" class="archive-article-date">
+  	<time datetime="2021-02-22T03:27:58.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2021-02-22</time>
 </a>
         
       </header>
     
     <div class="article-entry" itemprop="articleBody">
       
-        <blockquote>
-<p>2021/5/28</p>
-</blockquote>
-<h2 id="overview">Overview</h2>
-<p>TiKV使用Key-Value模型保存数据，并且提供有序遍历方法。可以看做一个按照Key的二进制顺序有序的巨大Map。使用开源的RocksDB作为单机存储引擎</p>
-<h3 id="raft协议">Raft协议</h3>
-<p>Raft协议的每个副本都会处于三种状态之一：Leader、Follower、Candidate</p>
-<ul>
-<li>Leader：所有请求的处理者，接受client的更新请求，本地处理后再同步给多个其他的副本</li>
-<li>Follower：请求的被动更新着，从Leader接受更新请求，让后写入本地日志文件</li>
-<li>Candidate：如果Follower在一定时间内没有收到Leader的心跳，则判断Leader可能已经故障，此时从新启动选主过程，此时副本会变成Candidate状态，直到选主结束</li>
-</ul>
-<a id="more"></a>
-<p>时间被分成很多连续的随机长度的term，term有唯一的id。每一个term一开始就进行选主。会有三种结果：</p>
-<ul>
-<li>自己被选成了主。收到majority的投票后，状态切换为Leader，并定期给其他Server发心跳消息，别的Server收到消息后将状态切换为Follower</li>
-<li>别人成为了主。将自己的state切换为Follower，并且更新本地的current_term_id</li>
-<li>没有选出主。投票被瓜分，没有Leader被选出，投票过程将超时，会增加current_term_id发起新一轮投票</li>
-</ul>
-<p>Leader被选出来后，接收客户端发来的请求，将它作为一个log entry添加到日志中，然后给其他Server发AppendEntriesRPC请求。当大多数副本已经将该命令写入到日志中，则执行这条log entry并返回结果到客户端。Raft保证一条commited（大多数副本写盘）的log entry持久化并且会被所有的节点执行。</p>
-<p>Leader刚选出来的时候，它的日志可能和其他Follower的不一致，有一定机制来保证日志的一致性。</p>
-<p>为了避免日志无限的增长，Raft会对整个系统进行snapshot，snapshot之前的日志都可以丢弃。在实际使用中snapshot频率需要合适。</p>
-<p>Raft考虑了集群的拓扑变化，支持增加/减少副本数，节点替换等。</p>
-<h3 id="region">Region</h3>
-<p>为了实现存储的水平扩展，需要将数据分散在多台机器上，TiKV将整个Key-Value空间分成很多端，每一段是一系列连续的Key，称作Region。数据会以Region为单位分散在集群中的所有节点上，并且保证每个节点上服务的Region数量差不多，同时以Region为单位做Raft的复制和成员管理</p>
-<center>
-<img src="/2021/05/28/TinyKV/region.png" alt="Region存储结构">
-</center>
-<blockquote>
-<p>2021/5/29</p>
-</blockquote>
-<h3 id="调度的需求">调度的需求</h3>
-<p>作为一个分布式高可用系统，必须满足的需求有：</p>
-<ul>
-<li>副本数量不能多也不能少</li>
-<li>副本需要分布在不同的机器上</li>
-<li>新加节点后，可以将其他节点上的副本迁移过来</li>
-<li>节点下线后，需要将该节点的数据迁移走</li>
-</ul>
-<p>作为一个良好的分布式系统，需要优化的地方有：</p>
-<ul>
-<li>维持整个集群的Leader分布均匀</li>
-<li>维持每个节点的储存容量均匀</li>
-<li>维持访问热点分布均匀</li>
-<li>控制Balance的速度，避免影响在线服务</li>
-<li>管理节点状态，包括手动上线/下线节点，以及自动下线失效节点</li>
-</ul>
-<p>为了满足这些需求，需要收集足够的信息，比如每个节点的状态，Raft Group的信息，业务访问操作的统计等。PD根据这些信息以及调度的策略，制定出尽量满足前面所述需求的调度计划。</p>
-<h3 id="调度的基本操作">调度的基本操作</h3>
-<p>调度需求看似复杂，整理下来无非是以下三件事：</p>
-<ul>
-<li>增加一个Replica</li>
-<li>删除一个Replica</li>
-<li>将Leader角色在一个Raft Group的不同Replica之间transfer</li>
-</ul>
-<h3 id="信息收集">信息收集</h3>
-<ul>
-<li>每个TiKV节点会定期向PD汇报节点的整体信息（是否存活，是否有新加入的Store，状态信息）</li>
-<li>每个Raft Group的Leader会定期向PD汇报信息（Region的状态）</li>
-</ul>
-<h3 id="调度的策略">调度的策略</h3>
-<ul>
-<li>一个Region的Replica数量正确（多删少加）</li>
-<li>一个Raft Group中的多个Replica不在同一个位置</li>
-<li>副本在Store之间均匀分配</li>
-<li>Leader数量在Store之间均匀分配</li>
-<li>访问热点适量在Store之间均匀分配</li>
-<li>各个Store存储空间的占用大致相等</li>
-<li>控制调度速度，避免影响在线服务</li>
-<li>支持手动下线节点</li>
-</ul>
-<blockquote>
-<p>2021/5/30</p>
-</blockquote>
-<h2 id="go">Go</h2>
-<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> main</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> <span class="string">&quot;fmt&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line">    <span class="comment">/* 这是我的第一个简单的程序 */</span></span><br><span class="line">   fmt.Println(<span class="string">&quot;Hello, World!&quot;</span>)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<ul>
-<li>大写字母开头的标识符对象可以被外部包的代码所使用，如果以小写字母开头，则对包外是不可见的</li>
-<li>变量声明：<code>var identifier type</code>或<code>v_name := value</code>自行推断数据类型</li>
-<li>函数可以返回多个值 <figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">swap</span><span class="params">(x, y <span class="keyword">string</span>)</span> <span class="params">(<span class="keyword">string</span>, <span class="keyword">string</span>)</span></span> &#123;</span><br><span class="line">   <span class="keyword">return</span> y, x</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
-<li>函数闭包 <figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">getSequence</span><span class="params">()</span> <span class="title">func</span><span class="params">()</span> <span class="title">int</span></span> &#123;</span><br><span class="line">   i:=<span class="number">0</span></span><br><span class="line">   <span class="keyword">return</span> <span class="function"><span class="keyword">func</span><span class="params">()</span> <span class="title">int</span></span> &#123;</span><br><span class="line">      i+=<span class="number">1</span></span><br><span class="line">     <span class="keyword">return</span> i  </span><br><span class="line">   &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
-<li>方法：包含了接受者的函数，接受者可以是命名类型或者结构体类型的一个值或者是一个指针 <figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(variable_name variable_data_type)</span> <span class="title">function_name</span><span class="params">()</span> [<span class="title">return_type</span>]</span>&#123;</span><br><span class="line">   <span class="comment">/* 函数体*/</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
-<li>声明数组 <figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> variable_name [SIZE] variable_type</span><br></pre></td></tr></table></figure></li>
-<li>空指针是<code>nil</code></li>
-<li>结构体可以用key: value赋值 <figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span> Books <span class="keyword">struct</span> &#123;</span><br><span class="line">   title <span class="keyword">string</span></span><br><span class="line">   author <span class="keyword">string</span></span><br><span class="line">   subject <span class="keyword">string</span></span><br><span class="line">   book_id <span class="keyword">int</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">fmt.Println(Books&#123;title: <span class="string">&quot;Go 语言&quot;</span>, author: <span class="string">&quot;www.runoob.com&quot;</span>&#125;)</span><br></pre></td></tr></table></figure></li>
-<li>切片（重点）</li>
-<li>for range：在切片中返回元素索引和索引对应的值，在集合中返回key-value对</li>
-<li>Map是一种无序的键值对的集合，使用hash实现，可惜像数组和切片一样迭代 <figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/* 声明变量，默认 map 是 nil */</span></span><br><span class="line"><span class="keyword">var</span> map_variable <span class="keyword">map</span>[key_data_type]value_data_type</span><br></pre></td></tr></table></figure></li>
-<li>语言接口：把所有具有共性的方法定义在一起，任何其他类型只要是实现了这些方法就是实现了这个接口 <br></li>
-</ul>
-<blockquote>
-<p>2021/5/31</p>
-</blockquote>
-<h3 id="go环境配置">Go环境配置</h3>
-<p>windows直接下载<a target="_blank" rel="noopener" href="https://golang.google.cn/dl/">msi文件</a>，Linux直接用安装好go的<a target="_blank" rel="noopener" href="https://hub.docker.com/_/golang">docker</a>。</p>
-<p>使用go get、go install（vscode安装go工具包）、go mod（代码运行）命令是，会下载相应的包或依赖包，但由于一些原因，从<code>golang.org/x/...</code>下载包会失败。从<code>Go 1.11</code>版本起，官方支持了<code>go module</code>包依赖管理工具和<code>GOPROXY</code>环境变量，可以通过更改代理来解决下载失败问题： <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">go env -w GO111MODULE=on</span><br><span class="line">go env -w GOPROXY=https://goproxy.io,direct</span><br></pre></td></tr></table></figure></p>
-<h3 id="go单元测试">Go单元测试</h3>
-<ul>
-<li>使用Go语言的标准库<code>testing</code>进行单元测试，测试文件以<code>_test.go</code>结尾</li>
-<li>测试用例名称一般命名为<code>Test</code>加上代测试的方法名</li>
-<li>运行<code>go test</code>，默认执行当前目录下以<code>xxx_test.go</code>的测试文件,该package下所有测试用例都会被执行，使用参数<code>-v</code>会显示每个用例的测试结果</li>
-<li>如果只想运行其中的一个用例，可以使用参数<code>-run</code>指定，该参数支持通配符和部分正则表达式</li>
-</ul>
-<blockquote>
-<p>2021/7/4</p>
-</blockquote>
-<h2 id="project1-standalonekv">Project1 StandaloneKV</h2>
-<p>在 <a target="_blank" rel="noopener" href="https://github.com/tidb-incubator/tinykv/blob/course/doc/project1-StandaloneKV.md">Project1</a> 中，需要构建一个单机键值存储的 <a target="_blank" rel="noopener" href="https://grpc.io/docs/guides/">gRPC</a> 服务器，并且支持 column familly(CF)，CF 类似于一个命名空间，不同 CF 中的同名的键是不同的，可以简单的将不同的CF理解成不同的mini databases。</p>
-<h3 id="目标与层次结构">目标与层次结构</h3>
-<p>Project1主要是实现<code>kv</code>中的部分代码来完成单机KV数据库服务器<code>Server</code>。它的层次结构如下图所示：</p>
-<center>
-<img src="/2021/05/28/TinyKV/server.png" width="40%" alt="Server层次结构">
-</center>
-<p>Server结构体为：</p>
-<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span> Server <span class="keyword">struct</span> &#123;</span><br><span class="line">	storage storage.Storage</span><br><span class="line"></span><br><span class="line">	<span class="comment">// (Used in 4A/4B)</span></span><br><span class="line">	Latches *latches.Latches</span><br><span class="line"></span><br><span class="line">	<span class="comment">// coprocessor API handler, out of course scope</span></span><br><span class="line">	copHandler *coprocessor.CopHandler</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>它有<code>RawGet()</code>、<code>RawPut()</code>、<code>RawDelete()</code>、<code>RawScan()</code>几个主要的方法，借助<code>Storage</code>的<code>Reader()</code>和<code>Write()</code>方法来实现。</p>
-<p>Storage是一个接口，它的定义如下 <figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span> Storage <span class="keyword">interface</span> &#123;</span><br><span class="line">	Start() error</span><br><span class="line">	Stop() error</span><br><span class="line">	Write(ctx *kvrpcpb.Context, batch []Modify) error</span><br><span class="line">	Reader(ctx *kvrpcpb.Context) (StorageReader, error)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure> StandAloneStorage 则是<code>Storage</code>接口的一个实现，它的定义如下：</p>
-<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span> StandAloneStorage <span class="keyword">struct</span> &#123;</span><br><span class="line">	<span class="comment">// Your Data Here (1).</span></span><br><span class="line">	engines *engine_util.Engines</span><br><span class="line">	config  *config.Config</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>它<code>Reader()</code>和<code>Write()</code>方法的实现用到了<code>engine_util.Engines</code>的方法，<code>engine_util.Engines</code>实际上是对 <a target="_blank" rel="noopener" href="https://github.com/dgraph-io/badger">badger</a>键值API的一个封装:</p>
-<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span> Engines <span class="keyword">struct</span> &#123;</span><br><span class="line">	<span class="comment">// Data, including data which is committed (i.e., committed across other nodes) and un-committed (i.e., only present</span></span><br><span class="line">	<span class="comment">// locally).</span></span><br><span class="line">	Kv     *badger.DB</span><br><span class="line">	KvPath <span class="keyword">string</span></span><br><span class="line">	<span class="comment">// Metadata used by Raft.</span></span><br><span class="line">	Raft     *badger.DB</span><br><span class="line">	RaftPath <span class="keyword">string</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>对<code>Engines</code>中键值的获取、插入、删除等操作，以及事务、迭代器<code>BadgerIterator</code>都在<code>kv/util/engine_util</code>中实现，<code>Storage</code>的读写操作都需要依赖这些API实现。</p>
-<h3 id="代码实现">代码实现</h3>
-<p>了解完整体的目标和实现逻辑后，就可以实现具体的代码了。</p>
-<p>首先我们定义好单机存储<code>StandAloneStorage</code>结构体： <figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span> StandAloneStorage <span class="keyword">struct</span> &#123;</span><br><span class="line">	<span class="comment">// Your Data Here (1).</span></span><br><span class="line">	engines *engine_util.Engines</span><br><span class="line">	config  *config.Config</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure> 以及根据配置创建该结构体的函数： <figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">NewStandAloneStorage</span><span class="params">(conf *config.Config)</span> *<span class="title">StandAloneStorage</span></span> &#123;</span><br><span class="line">	<span class="comment">// Your Code Here (1).</span></span><br><span class="line">	kvPath := conf.DBPath + <span class="string">&quot;/kv&quot;</span></span><br><span class="line">	raftPath := conf.DBPath + <span class="string">&quot;/raft&quot;</span></span><br><span class="line">	kvEngine := engine_util.CreateDB(kvPath, <span class="literal">false</span>)</span><br><span class="line">	<span class="keyword">var</span> raftEngine *badger.DB</span><br><span class="line">	<span class="keyword">if</span> conf.Raft &#123;</span><br><span class="line">		raftEngine = engine_util.CreateDB(raftPath, <span class="literal">true</span>)</span><br><span class="line">	&#125;</span><br><span class="line">	engines := engine_util.NewEngines(kvEngine, raftEngine, kvPath, raftPath)</span><br><span class="line"></span><br><span class="line">	<span class="keyword">return</span> &amp;StandAloneStorage&#123;</span><br><span class="line">		engines: engines,</span><br><span class="line">		config:  conf,</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure> 之后实现<code>Storage</code>接口，完成<code>Start()</code>、<code>Stop()</code>、<code>Reader()</code>、<code>Write()</code>四个函数，为Server提供基本的读写操作。 <figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(s *StandAloneStorage)</span> <span class="title">Start</span><span class="params">()</span> <span class="title">error</span></span> &#123;</span><br><span class="line">	<span class="comment">// Your Code Here (1).</span></span><br><span class="line">	<span class="keyword">return</span> <span class="literal">nil</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(s *StandAloneStorage)</span> <span class="title">Stop</span><span class="params">()</span> <span class="title">error</span></span> &#123;</span><br><span class="line">	<span class="comment">// Your Code Here (1).</span></span><br><span class="line">	<span class="keyword">return</span> s.engines.Close()</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(s *StandAloneStorage)</span> <span class="title">Reader</span><span class="params">(ctx *kvrpcpb.Context)</span> <span class="params">(storage.StorageReader, error)</span></span> &#123;</span><br><span class="line">	<span class="comment">// Your Code Here (1).</span></span><br><span class="line">	txn := s.engines.Kv.NewTransaction(<span class="literal">false</span>)</span><br><span class="line">	<span class="keyword">return</span> &amp;StandAloneStorageReader&#123;</span><br><span class="line">		txn: txn,</span><br><span class="line">	&#125;, <span class="literal">nil</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(s *StandAloneStorage)</span> <span class="title">Write</span><span class="params">(ctx *kvrpcpb.Context, batch []storage.Modify)</span> <span class="title">error</span></span> &#123;</span><br><span class="line">	<span class="comment">// Your Code Here (1).</span></span><br><span class="line">	<span class="keyword">for</span> _, modify := <span class="keyword">range</span> batch &#123;</span><br><span class="line">		<span class="keyword">switch</span> modify.Data.(<span class="keyword">type</span>) &#123;</span><br><span class="line">		<span class="keyword">case</span> storage.Put:</span><br><span class="line">			err := engine_util.PutCF(s.engines.Kv, modify.Cf(), modify.Key(), modify.Value())</span><br><span class="line">			<span class="keyword">if</span> err != <span class="literal">nil</span> &#123;</span><br><span class="line">				<span class="keyword">return</span> err</span><br><span class="line">			&#125;</span><br><span class="line">		<span class="keyword">case</span> storage.Delete:</span><br><span class="line">			err := engine_util.DeleteCF(s.engines.Kv, modify.Cf(), modify.Key())</span><br><span class="line">			<span class="keyword">if</span> err != <span class="literal">nil</span> &#123;</span><br><span class="line">				<span class="keyword">return</span> err</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">return</span> <span class="literal">nil</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure> 需要说明的是，<code>Reader</code>的实现需要用到<code>badger.Txn</code>，它为我们提供了键值的一致性快照，可以随时供之后读取。为此，我们要实现<code>StorageReader</code>接口： <figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span> StorageReader <span class="keyword">interface</span> &#123;</span><br><span class="line">	<span class="comment">// When the key doesn&#x27;t exist, return nil for the value</span></span><br><span class="line">	GetCF(cf <span class="keyword">string</span>, key []<span class="keyword">byte</span>) ([]<span class="keyword">byte</span>, error)</span><br><span class="line">	IterCF(cf <span class="keyword">string</span>) engine_util.DBIterator</span><br><span class="line">	Close()</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure> 具体实现如下 <figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span> StandAloneStorageReader <span class="keyword">struct</span> &#123;</span><br><span class="line">	txn *badger.Txn</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(s *StandAloneStorageReader)</span> <span class="title">GetCF</span><span class="params">(cf <span class="keyword">string</span>, key []<span class="keyword">byte</span>)</span> <span class="params">([]<span class="keyword">byte</span>, error)</span></span> &#123;</span><br><span class="line">	value, err := engine_util.GetCFFromTxn(s.txn, cf, key)</span><br><span class="line">	<span class="keyword">if</span> err == badger.ErrKeyNotFound &#123;</span><br><span class="line">		<span class="keyword">return</span> <span class="literal">nil</span>, <span class="literal">nil</span></span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">return</span> value, err</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(s *StandAloneStorageReader)</span> <span class="title">IterCF</span><span class="params">(cf <span class="keyword">string</span>)</span> <span class="title">engine_util</span>.<span class="title">DBIterator</span></span> &#123;</span><br><span class="line">	<span class="keyword">return</span> engine_util.NewCFIterator(cf, s.txn)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(s *StandAloneStorageReader)</span> <span class="title">Close</span><span class="params">()</span></span> &#123;</span><br><span class="line">	s.txn.Discard()</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure> 实现完<code>StandAloneStorage</code>后，便可以实现Server的<code>RawGet()</code>、<code>RawPut()</code>、<code>RawDelete()</code>、<code>RawScan()</code>四个方法，完成用于的各种数据库操作请求。</p>
-<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(server *Server)</span> <span class="title">RawGet</span><span class="params">(_ context.Context, req *kvrpcpb.RawGetRequest)</span> <span class="params">(*kvrpcpb.RawGetResponse, error)</span></span> &#123;</span><br><span class="line">	<span class="comment">// Your Code Here (1).</span></span><br><span class="line">	key := req.GetKey()</span><br><span class="line">	cf := req.GetCf()</span><br><span class="line">	reader, _ := server.storage.Reader(req.Context)</span><br><span class="line">	value, err2 := reader.GetCF(cf, key)</span><br><span class="line">	response := &amp;kvrpcpb.RawGetResponse&#123;</span><br><span class="line">		Value:    value,</span><br><span class="line">		NotFound: <span class="literal">false</span>,</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">if</span> value == <span class="literal">nil</span> &#123;</span><br><span class="line">		response.NotFound = <span class="literal">true</span></span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">if</span> err2 != <span class="literal">nil</span> &#123;</span><br><span class="line">		response.Error = err2.Error()</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">return</span> response, err2</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(server *Server)</span> <span class="title">RawPut</span><span class="params">(_ context.Context, req *kvrpcpb.RawPutRequest)</span> <span class="params">(*kvrpcpb.RawPutResponse, error)</span></span> &#123;</span><br><span class="line">	<span class="comment">// Your Code Here (1).</span></span><br><span class="line">	key := req.GetKey()</span><br><span class="line">	value := req.GetValue()</span><br><span class="line">	cf := req.GetCf()</span><br><span class="line"></span><br><span class="line">	err := server.storage.Write(<span class="literal">nil</span>, []storage.Modify&#123;</span><br><span class="line">		&#123;</span><br><span class="line">			Data: storage.Put&#123;</span><br><span class="line">				Cf:    cf,</span><br><span class="line">				Key:   key,</span><br><span class="line">				Value: value,</span><br><span class="line">			&#125;,</span><br><span class="line">		&#125;,</span><br><span class="line">	&#125;)</span><br><span class="line"></span><br><span class="line">	putResponse := &amp;kvrpcpb.RawPutResponse&#123;&#125;</span><br><span class="line">	<span class="keyword">if</span> err != <span class="literal">nil</span> &#123;</span><br><span class="line">		putResponse.Error = err.Error()</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">return</span> putResponse, err</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(server *Server)</span> <span class="title">RawDelete</span><span class="params">(_ context.Context, req *kvrpcpb.RawDeleteRequest)</span> <span class="params">(*kvrpcpb.RawDeleteResponse, error)</span></span> &#123;</span><br><span class="line">	<span class="comment">// Your Code Here (1).</span></span><br><span class="line">	key := req.GetKey()</span><br><span class="line">	cf := req.GetCf()</span><br><span class="line"></span><br><span class="line">	err := server.storage.Write(<span class="literal">nil</span>, []storage.Modify&#123;</span><br><span class="line">		&#123;</span><br><span class="line">			Data: storage.Delete&#123;</span><br><span class="line">				Cf:  cf,</span><br><span class="line">				Key: key,</span><br><span class="line">			&#125;,</span><br><span class="line">		&#125;,</span><br><span class="line">	&#125;)</span><br><span class="line"></span><br><span class="line">	deleteResponse := &amp;kvrpcpb.RawDeleteResponse&#123;&#125;</span><br><span class="line">	<span class="keyword">if</span> err != <span class="literal">nil</span> &#123;</span><br><span class="line">		deleteResponse.Error = err.Error()</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">return</span> deleteResponse, err</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(server *Server)</span> <span class="title">RawScan</span><span class="params">(_ context.Context, req *kvrpcpb.RawScanRequest)</span> <span class="params">(*kvrpcpb.RawScanResponse, error)</span></span> &#123;</span><br><span class="line">	<span class="comment">// Your Code Here (1).</span></span><br><span class="line">	startKey := req.GetStartKey()</span><br><span class="line">	limit := req.GetLimit()</span><br><span class="line">	cf := req.GetCf()</span><br><span class="line">	reader, _ := server.storage.Reader(<span class="literal">nil</span>)</span><br><span class="line">	iterator := reader.IterCF(cf)</span><br><span class="line"></span><br><span class="line">	<span class="keyword">var</span> kvs []*kvrpcpb.KvPair</span><br><span class="line">	<span class="keyword">var</span> err error</span><br><span class="line">	iterator.Seek(startKey)</span><br><span class="line">	<span class="keyword">for</span> i := <span class="number">0</span>; <span class="keyword">uint32</span>(i) &lt; limit; i++ &#123;</span><br><span class="line">		<span class="keyword">if</span> !iterator.Valid() &#123;</span><br><span class="line">			<span class="keyword">break</span></span><br><span class="line">		&#125;</span><br><span class="line">		item := iterator.Item()</span><br><span class="line">		key := item.Key()</span><br><span class="line">		<span class="keyword">var</span> value []<span class="keyword">byte</span></span><br><span class="line">		value, err = item.Value()</span><br><span class="line">		<span class="keyword">if</span> err != <span class="literal">nil</span> &#123;</span><br><span class="line">			<span class="keyword">break</span></span><br><span class="line">		&#125;</span><br><span class="line">		pair := kvrpcpb.KvPair&#123;</span><br><span class="line">			Key:   key,</span><br><span class="line">			Value: value,</span><br><span class="line">		&#125;</span><br><span class="line">		kvs = <span class="built_in">append</span>(kvs, &amp;pair)</span><br><span class="line">		iterator.Next()</span><br><span class="line">	&#125;</span><br><span class="line">	response := &amp;kvrpcpb.RawScanResponse&#123;</span><br><span class="line">		Kvs: kvs,</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">if</span> err != <span class="literal">nil</span> &#123;</span><br><span class="line">		response.Error = err.Error()</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">return</span> response, err</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h3 id="测试">测试</h3>
-<p>完成以上代码后可在根目录下运行 <code>make project1</code> 来对代码进行测试。</p>
-<center>
-<img src="/2021/05/28/TinyKV/test_project1.PNG" alt="project1测试">
-</center>
-<p><br> 在代码测试中可以帮助我们解决很多bug，比如有</p>
-<ul>
-<li>在获取错误的字符串时使用了<code>err.Error()</code>，但是<code>err</code>可能为空，需要进行判断</li>
-<li>在实现<code>StandAloneStorageReader</code>的<code>GetCF</code>函数时，如果出现了<code>ErrKeyNotFound</code>错误，需要返回空值而不是返回错误</li>
-<li>迭代器<code>BadgerIterator</code>的<code>Valid</code>函数是判断当前位置是否有效，而不是判断Next是否有效</li>
-</ul>
-<h2 id="project2-raftkv">Project2 RaftKV</h2>
-<p>要实现一个分布式的KV数据库，那么保证各数据库中数据的一致性就非常重要了。Project2主要就是使用一致性算法<a target="_blank" rel="noopener" href="https://github.com/maemual/raft-zh_cn/blob/master/raft-zh_cn.md">Raft</a>实现一个高可用的KV server，主要分为三个部分：</p>
-<ul>
-<li>实现基础的Raft算法</li>
-<li>在Raft的基础上构建一个容错的KV server</li>
-<li>支持raftlog的垃圾回收和快照</li>
-</ul>
-<h3 id="part-a">Part A</h3>
-<p>Part A实现基础的raft算法，需要补充的代码位于<code>raft/</code>，这一部分同样可以拆分为三个部分：</p>
-<ul>
-<li>Leader选举</li>
-<li>日志复制</li>
-<li>Raw node接口</li>
-</ul>
-<p>首先来看看代码的基本框架，最顶层的<code>RawNode</code>是<code>Raft</code>的一个包装，它的定义为</p>
-<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span> RawNode <span class="keyword">struct</span> &#123;</span><br><span class="line">	Raft *Raft</span><br><span class="line">	<span class="comment">// Your Data Here (2A).</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>而<code>Raft</code>则是Raft算法的主要结构体：</p>
-<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span> Raft <span class="keyword">struct</span> &#123;</span><br><span class="line">	id <span class="keyword">uint64</span></span><br><span class="line"></span><br><span class="line">	Term <span class="keyword">uint64</span></span><br><span class="line">	Vote <span class="keyword">uint64</span></span><br><span class="line"></span><br><span class="line">	<span class="comment">// the log</span></span><br><span class="line">	RaftLog *RaftLog</span><br><span class="line"></span><br><span class="line">	<span class="comment">// log replication progress of each peers</span></span><br><span class="line">	Prs <span class="keyword">map</span>[<span class="keyword">uint64</span>]*Progress</span><br><span class="line"></span><br><span class="line">	<span class="comment">// this peer&#x27;s role</span></span><br><span class="line">	State StateType</span><br><span class="line"></span><br><span class="line">	<span class="comment">// votes records</span></span><br><span class="line">	votes <span class="keyword">map</span>[<span class="keyword">uint64</span>]<span class="keyword">bool</span></span><br><span class="line"></span><br><span class="line">	<span class="comment">// msgs need to send</span></span><br><span class="line">	msgs []pb.Message</span><br><span class="line"></span><br><span class="line">	<span class="comment">// the leader id</span></span><br><span class="line">	Lead <span class="keyword">uint64</span></span><br><span class="line"></span><br><span class="line">	heartbeatTimeout <span class="keyword">int</span></span><br><span class="line"></span><br><span class="line">	electionTimeout <span class="keyword">int</span></span><br><span class="line"></span><br><span class="line">	heartbeatElapsed <span class="keyword">int</span></span><br><span class="line"></span><br><span class="line">	electionElapsed <span class="keyword">int</span></span><br><span class="line"></span><br><span class="line">	leadTransferee <span class="keyword">uint64</span></span><br><span class="line"></span><br><span class="line">	PendingConfIndex <span class="keyword">uint64</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>其中具体存储日志信息的是<code>RaftLog</code>：</p>
-<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span> RaftLog <span class="keyword">struct</span> &#123;</span><br><span class="line">	<span class="comment">// storage contains all stable entries since the last snapshot.</span></span><br><span class="line">	storage Storage</span><br><span class="line"></span><br><span class="line">	<span class="comment">// committed is the highest log position that is known to be in</span></span><br><span class="line">	<span class="comment">// stable storage on a quorum of nodes.</span></span><br><span class="line">	committed <span class="keyword">uint64</span></span><br><span class="line"></span><br><span class="line">	<span class="comment">// applied is the highest log position that the application has</span></span><br><span class="line">	<span class="comment">// been instructed to apply to its state machine.</span></span><br><span class="line">	<span class="comment">// Invariant: applied &lt;= committed</span></span><br><span class="line">	applied <span class="keyword">uint64</span></span><br><span class="line"></span><br><span class="line">	<span class="comment">// log entries with index &lt;= stabled are persisted to storage.</span></span><br><span class="line">	<span class="comment">// It is used to record the logs that are not persisted by storage yet.</span></span><br><span class="line">	<span class="comment">// Everytime handling `Ready`, the unstabled logs will be included.</span></span><br><span class="line">	stabled <span class="keyword">uint64</span></span><br><span class="line"></span><br><span class="line">	<span class="comment">// all entries that have not yet compact.</span></span><br><span class="line">	entries []pb.Entry</span><br><span class="line"></span><br><span class="line">	<span class="comment">// the incoming unstable snapshot, if any.</span></span><br><span class="line">	<span class="comment">// (Used in 2C)</span></span><br><span class="line">	pendingSnapshot *pb.Snapshot</span><br><span class="line"></span><br><span class="line">	<span class="comment">// Your Data Here (2A).</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>在<code>RaftLog</code>中使用<code>Storage</code>作为持久化存储，它实际是一个接口： <figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span> Storage <span class="keyword">interface</span> &#123;</span><br><span class="line">	<span class="comment">// InitialState returns the saved HardState and ConfState information.</span></span><br><span class="line">	InitialState() (pb.HardState, pb.ConfState, error)</span><br><span class="line">	<span class="comment">// Entries returns a slice of log entries in the range [lo,hi).</span></span><br><span class="line">	<span class="comment">// MaxSize limits the total size of the log entries returned, but</span></span><br><span class="line">	<span class="comment">// Entries returns at least one entry if any.</span></span><br><span class="line">	Entries(lo, hi <span class="keyword">uint64</span>) ([]pb.Entry, error)</span><br><span class="line">	<span class="comment">// Term returns the term of entry i, which must be in the range</span></span><br><span class="line">	<span class="comment">// [FirstIndex()-1, LastIndex()]. The term of the entry before</span></span><br><span class="line">	<span class="comment">// FirstIndex is retained for matching purposes even though the</span></span><br><span class="line">	<span class="comment">// rest of that entry may not be available.</span></span><br><span class="line">	Term(i <span class="keyword">uint64</span>) (<span class="keyword">uint64</span>, error)</span><br><span class="line">	<span class="comment">// LastIndex returns the index of the last entry in the log.</span></span><br><span class="line">	LastIndex() (<span class="keyword">uint64</span>, error)</span><br><span class="line">	<span class="comment">// FirstIndex returns the index of the first log entry that is</span></span><br><span class="line">	<span class="comment">// possibly available via Entries (older entries have been incorporated</span></span><br><span class="line">	<span class="comment">// into the latest Snapshot; if storage only contains the dummy entry the</span></span><br><span class="line">	<span class="comment">// first log entry is not available).</span></span><br><span class="line">	FirstIndex() (<span class="keyword">uint64</span>, error)</span><br><span class="line">	<span class="comment">// Snapshot returns the most recent snapshot.</span></span><br><span class="line">	<span class="comment">// If snapshot is temporarily unavailable, it should return ErrSnapshotTemporarilyUnavailable,</span></span><br><span class="line">	<span class="comment">// so raft state machine could know that Storage needs some time to prepare</span></span><br><span class="line">	<span class="comment">// snapshot and call Snapshot later.</span></span><br><span class="line">	Snapshot() (pb.Snapshot, error)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure> 在框架代码中使用内存实际存储，定义了结构体<code>MemoryStorage</code>实现接口： <figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span> MemoryStorage <span class="keyword">struct</span> &#123;</span><br><span class="line">	<span class="comment">// Protects access to all fields. Most methods of MemoryStorage are</span></span><br><span class="line">	<span class="comment">// run on the raft goroutine, but Append() is run on an application</span></span><br><span class="line">	<span class="comment">// goroutine.</span></span><br><span class="line">	sync.Mutex</span><br><span class="line"></span><br><span class="line">	hardState pb.HardState</span><br><span class="line">	snapshot  pb.Snapshot</span><br><span class="line">	<span class="comment">// ents[i] has raft log position i+snapshot.Metadata.Index</span></span><br><span class="line">	ents []pb.Entry</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure> .<code>raft\</code>的整体结构如下图所示：</p>
-<center>
-<img src="/2021/05/28/TinyKV/raft.png" width="40%" alt="raft层次结构">
-</center>
-<h4 id="leader选举">Leader选举</h4>
-<p>该部分主要是实现 <a target="_blank" rel="noopener" href="https://github.com/maemual/raft-zh_cn/blob/master/raft-zh_cn.md#52-%E9%A2%86%E5%AF%BC%E4%BA%BA%E9%80%89%E4%B8%BE">Raft 5.2领导人选举</a>，由于算法本身涉及到的细节比较多，并且对框架代码不是很熟悉，一开始就有无从下手的感觉，所以基本上是面向测试编程，运行<code>make project2aa</code>来执行测试代码，根据测试代码的思路以及出错的位置来补充完善代码直到通过所有测试，现总结该部分如下：</p>
-<p>首先完善创建各个结构体的函数，比如<code>newRaft()</code>、<code>newLog()</code>，然后完善<code>becomeFollower()</code>、<code>becomeCandidate()</code>、<code>becomeLeader()</code>函数对Raft状态进行转换。接着实现逻辑时钟函数<code>tick()</code>，来对心跳包和选举进行计时并判断是否超时。需要实现的最核心的函数是<code>Step()</code>，它对Raft收到的各种消息进行处理：</p>
-<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(r *Raft)</span> <span class="title">Step</span><span class="params">(m pb.Message)</span> <span class="title">error</span></span> &#123;</span><br><span class="line">	<span class="comment">// Your Code Here (2A).</span></span><br><span class="line">	<span class="keyword">switch</span> r.State &#123;</span><br><span class="line">	<span class="keyword">case</span> StateFollower:</span><br><span class="line">		<span class="keyword">switch</span> m.MsgType &#123;</span><br><span class="line">		<span class="keyword">case</span> pb.MessageType_MsgAppend:</span><br><span class="line">			r.handleAppendEntries(m)</span><br><span class="line">		<span class="keyword">case</span> pb.MessageType_MsgHup:</span><br><span class="line">			r.requestElection()</span><br><span class="line">		<span class="keyword">case</span> pb.MessageType_MsgRequestVote:</span><br><span class="line">			r.handleVote(m)</span><br><span class="line">		<span class="keyword">case</span> pb.MessageType_MsgHeartbeat:</span><br><span class="line">			r.handleHeartbeat(m)</span><br><span class="line">		&#125;</span><br><span class="line">	<span class="keyword">case</span> StateCandidate:</span><br><span class="line">		<span class="keyword">switch</span> m.MsgType &#123;</span><br><span class="line">		<span class="keyword">case</span> pb.MessageType_MsgAppend:</span><br><span class="line">			<span class="keyword">if</span> m.Term &gt;= r.Term &#123;</span><br><span class="line">				r.becomeFollower(m.Term, m.From)</span><br><span class="line">				r.handleAppendEntries(m)</span><br><span class="line">			&#125;</span><br><span class="line">		<span class="keyword">case</span> pb.MessageType_MsgHup:</span><br><span class="line">			r.requestElection()</span><br><span class="line">		<span class="keyword">case</span> pb.MessageType_MsgRequestVoteResponse:</span><br><span class="line">			r.handleVoteResponse(m)</span><br><span class="line">		<span class="keyword">case</span> pb.MessageType_MsgRequestVote:</span><br><span class="line">			r.handleVote(m)</span><br><span class="line">		<span class="keyword">case</span> pb.MessageType_MsgHeartbeat:</span><br><span class="line">			r.handleHeartbeat(m)</span><br><span class="line">		&#125;</span><br><span class="line">	<span class="keyword">case</span> StateLeader:</span><br><span class="line">		<span class="keyword">switch</span> m.MsgType &#123;</span><br><span class="line">		<span class="keyword">case</span> pb.MessageType_MsgAppend:</span><br><span class="line">			<span class="keyword">if</span> m.Term &gt; r.Term &#123;</span><br><span class="line">				r.becomeFollower(m.Term, m.From)</span><br><span class="line">				r.handleAppendEntries(m)</span><br><span class="line">			&#125;</span><br><span class="line">		<span class="keyword">case</span> pb.MessageType_MsgRequestVote:</span><br><span class="line">			r.handleVote(m)</span><br><span class="line">		<span class="keyword">case</span> pb.MessageType_MsgHeartbeat:</span><br><span class="line">			r.handleHeartbeat(m)</span><br><span class="line">		<span class="keyword">case</span> pb.MessageType_MsgBeat:</span><br><span class="line">			<span class="keyword">for</span> id := <span class="keyword">range</span> r.Prs &#123;</span><br><span class="line">				r.sendHeartbeat(id)</span><br><span class="line">			&#125;</span><br><span class="line">			r.heartbeatElapsed = <span class="number">0</span></span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">return</span> <span class="literal">nil</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>需要处理的消息类型主要有：</p>
-<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Some MessageType defined here are local messages which not come from the network, but should</span></span><br><span class="line"><span class="comment">// also use the Step method to handle</span></span><br><span class="line"><span class="class"><span class="keyword">enum</span> <span class="title">MessageType</span> &#123;</span></span><br><span class="line">    <span class="comment">// &#x27;MessageType_MsgHup&#x27; is a local message used for election. If an election timeout happened,</span></span><br><span class="line">    <span class="comment">// the node should pass &#x27;MessageType_MsgHup&#x27; to its Step method and start a new election.</span></span><br><span class="line">    MsgHup = <span class="number">0</span>;</span><br><span class="line">    <span class="comment">// &#x27;MessageType_MsgBeat&#x27; is a local message that signals the leader to send a heartbeat</span></span><br><span class="line">    <span class="comment">// of the &#x27;MessageType_MsgHeartbeat&#x27; type to its followers.</span></span><br><span class="line">    MsgBeat = <span class="number">1</span>;</span><br><span class="line">    <span class="comment">// &#x27;MessageType_MsgPropose&#x27; is a local message that proposes to append data to the leader&#x27;s log entries.</span></span><br><span class="line">    MsgPropose = <span class="number">2</span>;</span><br><span class="line">    <span class="comment">// &#x27;MessageType_MsgAppend&#x27; contains log entries to replicate.</span></span><br><span class="line">    MsgAppend = <span class="number">3</span>;</span><br><span class="line">    <span class="comment">// &#x27;MessageType_MsgAppendResponse&#x27; is response to log replication request(&#x27;MessageType_MsgAppend&#x27;).</span></span><br><span class="line">    MsgAppendResponse = <span class="number">4</span>;</span><br><span class="line">    <span class="comment">// &#x27;MessageType_MsgRequestVote&#x27; requests votes for election.</span></span><br><span class="line">    MsgRequestVote = <span class="number">5</span>;</span><br><span class="line">    <span class="comment">// &#x27;MessageType_MsgRequestVoteResponse&#x27; contains responses from voting request.</span></span><br><span class="line">    MsgRequestVoteResponse = <span class="number">6</span>;</span><br><span class="line">    <span class="comment">// &#x27;MessageType_MsgSnapshot&#x27; requests to install a snapshot message.</span></span><br><span class="line">    MsgSnapshot = <span class="number">7</span>;</span><br><span class="line">    <span class="comment">// &#x27;MessageType_MsgHeartbeat&#x27; sends heartbeat from leader to its followers.</span></span><br><span class="line">    MsgHeartbeat = <span class="number">8</span>;</span><br><span class="line">    <span class="comment">// &#x27;MessageType_MsgHeartbeatResponse&#x27; is a response to &#x27;MessageType_MsgHeartbeat&#x27;.</span></span><br><span class="line">    MsgHeartbeatResponse = <span class="number">9</span>;</span><br><span class="line">    <span class="comment">// &#x27;MessageType_MsgTransferLeader&#x27; requests the leader to transfer its leadership.</span></span><br><span class="line">    MsgTransferLeader = <span class="number">11</span>;</span><br><span class="line">    <span class="comment">// &#x27;MessageType_MsgTimeoutNow&#x27; send from the leader to the leadership transfer target, to let</span></span><br><span class="line">    <span class="comment">// the transfer target timeout immediately and start a new election.</span></span><br><span class="line">    MsgTimeoutNow = <span class="number">12</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>在代码实现和消息处理的过程中有很多需要注意的细节：</p>
-<ul>
-<li>在收到<code>MsgAppend</code>消息后，若当前节点 term 小于消息中的 term，则更新 term 并将状态转为 Follower</li>
-<li>当节点启动时，应该处于 Follower 状态</li>
-<li>如果 Leader 的心跳包计时达到后，应向其他节点发送<code>MsgHeartbeat</code>消息</li>
-<li>当一段时间 Follower 没有收到 Leader 消息或者 Candidate 没有赢得选举，则会增加当前 term，转为 Candidate 状态，开始选举（为自己投票，并请求其他节点投票）</li>
-<li>在 Leader 选举中，只有赢得大多数节点的选票才能当选 Leader</li>
-<li>每个 follower 在一个 term 中只会根据先来先服务的原则为一个 Candidate 投票</li>
-<li>在 Candidate 等待投票的过程中，如果收到了其他节点发来的<code>MsgAppend</code>消息，且消息的 term 至少和当前节点 term 一样大，则 Candidate 承认该 Leader 的合法性并转为 Follower 状态</li>
-<li>如果多个节点同时发起选举则可能导致选票被瓜分而无法成功选出 Leader，因此在选举冲突后应该在原来的选举超时限制上增加一个随机值</li>
-<li>如果 Candidate 的日志比没有当前节点新（term更小或相同term下index更小），则当前节点拒绝投票</li>
-</ul>
-<p>还有很多函数使用以及结构体赋值等等BUG都可以在运行测试时找出来填补，最终一个个Debug后可以成功通过<code>make project2aa</code></p>
-<center>
-<img src="/2021/05/28/TinyKV/test_project2aa.PNG" alt="project2aa测试">
-</center>
+        <p>离我写第一篇博客过去了20天，一眨眼就到了开学的日子。在这期间我还是不孚所望地什么事都没干，唉~~ 国创3月8日开始申报，3月22日开始结项；毕设3月15开始中期检查（完成论文75%），我的天呐，之前还没觉得什么，现在一看通知和今天的日期，时间怎么这么紧啊！我现在已经没脸见龙哥了。</p>
+<p>现在真的是没办法了，鸡血不顶用，deadline可还是实打实地摆在那儿，我面临着严重地的假期后的焦虑，必须得做点事了。</p>
 
       
 
@@ -373,11 +183,7 @@
 		<ul class="article-tag-list">
 			 
         		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">TinyKV</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">数据库</a>
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">随笔</a>
         		</li>
       		
 		</ul>
@@ -386,84 +192,16 @@
       
 
       
-
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2021/02/22/%E5%BC%80%E5%AD%A6/">展开全文 >></a>
+        </p>
       
-        
-<div class="share-btn share-icons tooltip-left">
-  <div class="tooltip tooltip-east">
-    <span class="tooltip-item">
-      <a href="javascript:;" class="share-sns share-outer">
-        <i class="icon icon-share"></i>
-      </a>
-    </span>
-    <span class="tooltip-content">
-      <div class="share-wrap">
-        <div class="share-icons">
-          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
-            <i class="icon icon-weibo"></i>
-          </a>
-          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
-            <i class="icon icon-weixin"></i>
-          </a>
-          <a class="qq share-sns" href="javascript:;" data-type="qq">
-            <i class="icon icon-qq"></i>
-          </a>
-          <a class="douban share-sns" href="javascript:;" data-type="douban">
-            <i class="icon icon-douban"></i>
-          </a>
-          <a class="qzone share-sns" href="javascript:;" data-type="qzone">
-            <i class="icon icon-qzone"></i>
-          </a>
-          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
-            <i class="icon icon-facebook"></i>
-          </a>
-          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
-            <i class="icon icon-twitter"></i>
-          </a>
-          <a class="google share-sns" href="javascript:;" data-type="google">
-            <i class="icon icon-google"></i>
-          </a>
-        </div>
-      </div>
-    </span>
-  </div>
-</div>
 
-<div class="page-modal wx-share js-wx-box">
-    <a class="close js-modal-close" href="javascript:;"><i class="icon icon-close"></i></a>
-    <p>扫一扫，分享到微信</p>
-    <div class="wx-qrcode">
-      <img src="//pan.baidu.com/share/qrcode?url=http://chenyunong.com/2021/05/28/TinyKV/" alt="微信分享二维码">
-    </div>
-</div>
-
-<div class="mask js-mask"></div>
       
       <div class="clearfix"></div>
     </div>
   </div>
 </article>
-
-  
-<nav id="article-nav">
-  
-    <a href="/2021/06/05/Algorithm/" id="article-nav-newer" class="article-nav-link-wrap">
-      <i class="icon-circle-left"></i>
-      <div class="article-nav-title">
-        
-          DBISAlgorithm
-        
-      </div>
-    </a>
-  
-  
-    <a href="/2021/05/27/ByteDanceInterview/" id="article-nav-older" class="article-nav-link-wrap">
-      <div class="article-nav-title">字节后台开发面试</div>
-      <i class="icon-circle-right"></i>
-    </a>
-  
-</nav>
-
 
 <aside class="wrap-side-operation">
     <div class="mod-side-operation">
@@ -478,32 +216,101 @@
         </div>
         
         
-        <div class="toc-container tooltip-left">
-            <i class="icon-font icon-category"></i>
-            <div class="tooltip tooltip-east">
-                <span class="tooltip-item">
-                </span>
-                <span class="tooltip-content">
-                    <div class="toc-article">
-                    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#overview"><span class="toc-number">1.</span> <span class="toc-text">Overview</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#raft%E5%8D%8F%E8%AE%AE"><span class="toc-number">1.1.</span> <span class="toc-text">Raft协议</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#region"><span class="toc-number">1.2.</span> <span class="toc-text">Region</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%B0%83%E5%BA%A6%E7%9A%84%E9%9C%80%E6%B1%82"><span class="toc-number">1.3.</span> <span class="toc-text">调度的需求</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%B0%83%E5%BA%A6%E7%9A%84%E5%9F%BA%E6%9C%AC%E6%93%8D%E4%BD%9C"><span class="toc-number">1.4.</span> <span class="toc-text">调度的基本操作</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BF%A1%E6%81%AF%E6%94%B6%E9%9B%86"><span class="toc-number">1.5.</span> <span class="toc-text">信息收集</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%B0%83%E5%BA%A6%E7%9A%84%E7%AD%96%E7%95%A5"><span class="toc-number">1.6.</span> <span class="toc-text">调度的策略</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#go"><span class="toc-number">2.</span> <span class="toc-text">Go</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#go%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE"><span class="toc-number">2.1.</span> <span class="toc-text">Go环境配置</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#go%E5%8D%95%E5%85%83%E6%B5%8B%E8%AF%95"><span class="toc-number">2.2.</span> <span class="toc-text">Go单元测试</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#project1-standalonekv"><span class="toc-number">3.</span> <span class="toc-text">Project1 StandaloneKV</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%9B%AE%E6%A0%87%E4%B8%8E%E5%B1%82%E6%AC%A1%E7%BB%93%E6%9E%84"><span class="toc-number">3.1.</span> <span class="toc-text">目标与层次结构</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BB%A3%E7%A0%81%E5%AE%9E%E7%8E%B0"><span class="toc-number">3.2.</span> <span class="toc-text">代码实现</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%B5%8B%E8%AF%95"><span class="toc-number">3.3.</span> <span class="toc-text">测试</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#project2-raftkv"><span class="toc-number">4.</span> <span class="toc-text">Project2 RaftKV</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#part-a"><span class="toc-number">4.1.</span> <span class="toc-text">Part A</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#leader%E9%80%89%E4%B8%BE"><span class="toc-number">4.1.1.</span> <span class="toc-text">Leader选举</span></a></li></ol></li></ol></li></ol>
-                    </div>
-                </span>
+    </div>
+</aside>
+
+
+
+
+  
+    <article id="post-写在开始" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2021/02/03/%E5%86%99%E5%9C%A8%E5%BC%80%E5%A7%8B/">写在开始</a>
+    </h1>
+  
+
+        
+        <a href="/2021/02/03/%E5%86%99%E5%9C%A8%E5%BC%80%E5%A7%8B/" class="archive-article-date">
+  	<time datetime="2021-02-03T08:28:40.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2021-02-03</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="现状">现状</h2>
+<p>现在2021年2月初，我已经在家里舒舒服服的度过了大半个大四寒假。在家里吃了玩，玩了睡的生活固然惬意，但是跟导师许下的研究进展承诺和悬而未办的国创论文报告却总让我感到焦虑。从明天开始学习到下周开始学习，转眼一月就过去了，面对龙哥的push也只能说研究ing，我觉着再这样下去可能要完犊子了，于是便乘着这短暂的焦虑和热情开始着手我的正经事儿。</p>
+<h2 id="关于博客">关于博客</h2>
+<p>本来我是在枯燥无聊地做着调研工作，却在搜索资料的时候无意中看到了<a target="_blank" rel="noopener" href="https://tobiaslee.top/2018/09/30/Text-Generation-with-GAN/">TobiasLee</a>的一篇博客:</p>
+<blockquote>
+<p>SeqGAN 这一框架下的 GAN-based 文本生成模型，work 很大程度上是 training trick 的堆砌，并不适合工程应用，但依旧值得探索，或者蹭热点发 Paper</p>
+</blockquote>
+<p>能如此高屋建瓴的得出这样的结论，想必一定是NLP领域的大牛吧。怀着这样的好奇心我拜读了他的博客文章，结果却发现这竟然是人家大二写的一篇文章！！！而现在是一名北大的研究生。我翻着他的博客，通过文字走进了另一个人的生活，真是奇妙啊。有如此知识、文笔、勤奋，我真的十分羡慕他。相比起来，我的学习和生活简直平庸的不行。</p>
+<p>在本就焦虑的情况下再受到了这样的比较刺激，我感觉我又有动力了（鸡汤真香）。成为大佬的第一步就是向大佬学习，于是我在网上找了许多资料和教程，建了这样一个大佬同款博客，督促自己好好读论文、写笔记。就算无法实现，多看看书、打打字不也美哉？</p>
+<h2 id="后续工作">后续工作</h2>
+<p>寒假已经所剩无几了，但我却始终无法进入状态，干了这碗热鸡汤，我得将注意力转移到学习工作上来了。从现在开始，一天至少阅读一篇论文，写点笔记，学习一些知识，国创和毕业论文早日做出点东西，Fighting！！！</p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">随笔</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2021/02/03/%E5%86%99%E5%9C%A8%E5%BC%80%E5%A7%8B/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
             </div>
         </div>
+        
         
     </div>
 </aside>
 
 
 
-  
-  
-  
 
   
-
   
-
+    <nav id="page-nav">
+      <a class="extend prev" rel="prev" href="/page/2/">&amp;laquo; Prev</a><a class="page-number" href="/">1</a><a class="page-number" href="/page/2/">2</a><span class="page-number current">3</span>
+    </nav>
   
 
 
@@ -529,8 +336,8 @@
     <script>
 	var yiliaConfig = {
 		mathjax: true,
-		isHome: false,
-		isPost: true,
+		isHome: true,
+		isPost: false,
 		isArchive: false,
 		isTag: false,
 		isCategory: false,
